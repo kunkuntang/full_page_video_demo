@@ -15,6 +15,7 @@ window.onload = function() {
   videoW = video.videoWidth;
 
   function resetVideoCon() {
+    console.log('jj')
     if (winH / videoH < winW / videoW) {
       video.style.width = winW + 'px';
     } else {
@@ -24,7 +25,13 @@ window.onload = function() {
 
   resetVideoCon();
 
-  window.onresize = resetVideoCon;
+  var timeId = -1;
+  window.onresize = function() {
+    timeId = setTimeout(function() {
+      console.log(timeId)
+      resetVideoCon();
+    }, 500)
+  }
 
   setTimeout(() => {
     mainTitle.style.marginTop = 0;
