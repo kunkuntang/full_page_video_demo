@@ -22,6 +22,7 @@ li {
   overflow: hidden;
   z-index: -1;
   background: url('../video/ocean.jpg') center no-repeat;
+  background-size: cover;
 }
 
 .video {
@@ -33,7 +34,7 @@ li {
   top: 50%;
   transform: translate(-50%, -50%);
   width: auto;
-  height: 678px;
+  height: auto;
 }
 
 .titleCon {
