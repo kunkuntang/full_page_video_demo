@@ -1,0 +1,44 @@
+{
+  "name": "gulp-scaffold",
+  "version": "1.0.0",
+  "description": "a scaffold of gulp",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp server",
+    "build": "gulp build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunkuntang/gulp-scaffold.git"
+  },
+  "keywords": [
+    "gulp"
+  ],
+  "author": "kuntang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kunkuntang/gulp-scaffold/issues"
+  },
+  "homepage": "https://github.com/kunkuntang/gulp-scaffold#readme",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "browser-sync": "^2.19.0",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^3.9.4",
+    "gulp-htmlmin": "^4.0.0",
+    "gulp-imagemin": "^4.0.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sequence": "^1.0.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-url-replace": "^1.0.2",
+    "pump": "^3.0.0"
+  }
+}

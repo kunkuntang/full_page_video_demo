@@ -1,0 +1,119 @@
+const gulp = require('gulp')
+const htmlmin = require('gulp-htmlmin')
+const imagemin = require('gulp-imagemin')
+const uglify = require('gulp-uglify')
+const pump = require('pump')
+const babel = require('gulp-babel')
+const autoprefixer = require('gulp-autoprefixer');
+const sass = require('gulp-sass')
+const clean = require('gulp-clean')
+const sourcemaps = require('gulp-sourcemaps')
+const gulpSequence = require('gulp-sequence')
+const browserSync = require('browser-sync')
+const reload = browserSync.reload
+const replace = require('gulp-url-replace')
+const cleanCSS = require('gulp-clean-css');
+
+const fs = require('fs')
+const path = require('path')
+
+gulp.task('build:css', () => {
+  gulp.src('./src/css/**/*.css')
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(cleanCSS({ compatibility: 'ie8' }))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(reload({ stream: true }))
+
+  gulp.src('./src/css/**/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(reload({ stream: true }))
+})
+
+gulp.task('build:js', () => {
+  pump([gulp.src('src/**/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['env']
+    }))
+    .pipe(uglify()),
+    sourcemaps.write('./'),
+    gulp.dest('dist/'),
+    reload({ stream: true })
+  ])
+})
+
+const baseUrl = './'
+  // const baseUrl = 'http://www.lenkuntang.cn/starcard/'
+gulp.task('build:html', () => {
+  gulp.src('src/*.html')
+    .pipe(replace({
+      //   './js': 'https://www.lenkuntang.cn/js', 替换成线上生产地址(cdn)
+      './js': baseUrl + 'js',
+      './css': baseUrl + 'css',
+      './img': baseUrl + 'img',
+      './font': baseUrl + 'font'
+    }))
+    .pipe(htmlmin({ collapseWhitespace: true }))
+    .pipe(gulp.dest('dist'))
+    .pipe(reload({ stream: true }))
+})
+
+gulp.task('build:font', () => {
+  gulp.src('src/font/**/*')
+    .pipe(gulp.dest('dist/font'))
+})
+
+gulp.task('build:image', () => {
+  gulp.src('src/img/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest('dist/img'))
+})
+
+gulp.task('build:video', () => {
+  gulp.src('src/video/*')
+    .pipe(gulp.dest('dist/video'))
+})
+
+gulp.task('build:clean', () => {
+  return gulp.src('dist', { read: false })
+    .pipe(clean());
+})
+
+gulp.task('build', gulpSequence(['build:css', 'build:html', 'build:js', 'build:image', 'build:font', 'build:video']))
+
+gulp.task('default', gulpSequence('build:clean', 'build'))
+
+gulp.task('watch', ['default'], () => {
+  gulp.watch('./src/js/**/*.js', ['build:js']).on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
+  gulp.watch('./src/css/**/*.scss', ['build:css']).on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
+  gulp.watch('./src/**/*.html', ['build:html']).on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
+})
+
+// 监视文件改动并重新载入
+gulp.task('server', ['default'], function() {
+  browserSync({
+    server: {
+      baseDir: 'dist'
+    }
+  });
+
+  gulp.watch('./src/*.html', ['build:html'])
+  gulp.watch(['./src/css/**/*.css', './src/css/**/*.scss'], ['build:css'])
+  gulp.watch('./src/**/*.js', ['build:js'])
+});
