@@ -27,8 +27,8 @@ window.onload = function() {
 
   var timeId = -1;
   window.onresize = function() {
+    clearTimeout(timeId)
     timeId = setTimeout(function() {
-      console.log(timeId)
       resetVideoCon();
     }, 500)
   }
